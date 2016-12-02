@@ -1,9 +1,8 @@
 'use strict';
 const shortid = require('shortid');
 const AWS = require('aws-sdk');  
-const dynamo = new AWS.DynamoDB.DocumentClient();
-
-
+var db = new AWS.DynamoDB();
+var docClient = new AWS.DynamoDB.DocumentClient();
 
 function getBody(message, event){
     var body = message + " <hr>"+
@@ -27,7 +26,6 @@ module.exports.smelt = (event, context, callback) => {
     response.body = getBody("<h1>Home Page</h1>", event);
     return callback(null, response);
   } else if (event.path === "/smelt/new"){
-    var db = new aws.DynamoDB();
 
     var id = shortid.generate();
     var model = {
@@ -43,12 +41,11 @@ module.exports.smelt = (event, context, callback) => {
     });
 
   } else if (event.path === "/smelt/list"){
-    var dbClient = new AWS.DynamoDBClient.DocumentClient();
     var params = {
         TableName: "Items"
     };
 
-    dbClient.scan(params, function(err, data){
+    docClient.scan(params, function(err, data){
 
       if (err) {
         response.body = getBody("<h1>Error</h1>", event);
