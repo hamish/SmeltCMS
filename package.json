@@ -1,0 +1,27 @@
+{
+  "name": "smeltcms",
+  "version": "1.0.0",
+  "description": "Cloud Native CMS",
+  "main": "handler.js",
+  "dependencies": {
+    "shortid": "^2.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamish/SmeltCMS.git"
+  },
+  "keywords": [
+    "CMS",
+    "Serverless"
+  ],
+  "author": "Hamish Currie",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/hamish/SmeltCMS/issues"
+  },
+  "homepage": "https://github.com/hamish/SmeltCMS#readme"
+}
