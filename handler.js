@@ -13,6 +13,15 @@ function getBody(message, event){
     "<hr>Lambda called with event values: <pre>" +JSON.stringify(event, null, 2) + "</pre>";
     return body;
 }
+function getDynamoSmeltItem(type, slug, text){
+  var o = {
+    ItemId: {"S", shortid.generate()}
+    Type: {"S": type},
+    Slug: {"S": slug},
+    Text: {"S": text}
+  }
+  return o;
+}
 
 module.exports.smelt = (event, context, callback) => {
   const response = {
@@ -25,13 +34,11 @@ module.exports.smelt = (event, context, callback) => {
   if (event.path === "/smelt/" || event.path === "/smelt" ){
     response.body = getBody("<h1>Home Page</h1>", event);
     return callback(null, response);
+
   } else if (event.path === "/smelt/new"){
 
     var id = shortid.generate();
-    var model = {
-      ItemId: {"S" : ""},
-    };
-    model.ItemId.S=String(id);
+    var item = getDynamoSmeltItem("Page", "/about", "Hi there")
     db.putItem({
       TableName: "Items",
       Item: model
