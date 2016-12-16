@@ -65,6 +65,12 @@ functions:
           path: smelt/new
           method: get
 
+  smeltGenerate:
+    handler: generate.handler
+    events:
+      - http:
+          path: smelt/generate
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -80,6 +86,14 @@ functions:
 
 resources:  
   Resources:
+    PublicS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: smelt-dev-public
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: error.html
     DynamoDbTable:
       Type: AWS::DynamoDB::Table
       Properties:

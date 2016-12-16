@@ -7,6 +7,7 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 function getBody(message, event){
     var body = message + " <hr>"+
     "<a href=''>Home</a> "+
+    "<a href='generate'>Generate</a> "+
     "<a href='list'>List</a> "+
     "<a href='new'>New</a> "+
     "<a href='testRedirect'>testRedirect</a> "+
@@ -14,8 +15,9 @@ function getBody(message, event){
     return body;
 }
 function getDynamoSmeltItem(type, slug, text){
+  var id = shortid.generate();
   var o = {
-    ItemId: {"S", shortid.generate()}
+    ItemId: {"S": id},
     Type: {"S": type},
     Slug: {"S": slug},
     Text: {"S": text}
@@ -37,11 +39,10 @@ module.exports.smelt = (event, context, callback) => {
 
   } else if (event.path === "/smelt/new"){
 
-    var id = shortid.generate();
-    var item = getDynamoSmeltItem("Page", "/about", "Hi there")
+    var item = getDynamoSmeltItem("Page", "/page/%s"%(id), "Hi there");
     db.putItem({
       TableName: "Items",
-      Item: model
+      Item: item
     }, function (err, data){
       response.body = getBody("<h1>New Item Saved</h1>" + id, event);
       return callback(null, response);
@@ -69,8 +70,7 @@ module.exports.smelt = (event, context, callback) => {
   } else {
     response.body = getBody("<h1>Unexpected path</h1>" + event.path, event);
     return callback(null, response);
-
-  }
+}
 };
 
 
