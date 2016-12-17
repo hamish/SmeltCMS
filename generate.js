@@ -12,7 +12,7 @@ module.exports.handler = (event, context, callback) => {
   };
 
     var now = new Date();
-    var jsonDate = now.toJSON();
+    var jsonDate = String(now.toJSON());
 
     var file_key = encodeURIComponent("index.html");
     var params = {
@@ -20,7 +20,8 @@ module.exports.handler = (event, context, callback) => {
       Key: file_key, /* required */
       ACL: 'public-read',
       Body: 'This is a file in S3. Generated ' + jsonDate,
-      StorageClass: 'STANDARD'
+      StorageClass: 'STANDARD',
+      ContentType: "text/html"
     };
 
     s3.putObject(params, function(err, data) {

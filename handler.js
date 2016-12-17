@@ -17,10 +17,10 @@ function getBody(message, event){
 function getDynamoSmeltItem(id, type, slug, text){
   
   var o = {
-    ItemId: {"S": id},
-    Type: {"S": type},
-    Slug: {"S": slug},
-    Text: {"S": text}
+    ItemId: {"S": String(id)},
+    Type: {"S": String(type)},
+    Slug: {"S": String(slug)},
+    Text: {"S": String(text) }
   }
   return o;
 }
@@ -38,12 +38,15 @@ module.exports.smelt = (event, context, callback) => {
     return callback(null, response);
 
   } else if (event.path === "/smelt/new"){
-    var id = shortid.generate();
-    var item = getDynamoSmeltItem(id, "Page", "/page/%s"%(id), "Hi there");
+    var id = String(shortid.generate());
+    var item = getDynamoSmeltItem(id, "Page", "/page/"+ id, "Hi there");
     db.putItem({
       TableName: "Items",
       Item: item
     }, function (err, data){
+      if (err) console.log(err, err.stack); // an error occurred
+      else     console.log(data);           // successful response
+
       response.body = getBody("<h1>New Item Saved</h1>" + id, event);
       return callback(null, response);
     });
@@ -61,7 +64,8 @@ module.exports.smelt = (event, context, callback) => {
       }      
       var l = "<h1>List</h1> Values: <ul>"
       for(var i = 0; i < data.Items.length; i++){
-           l = l +"<li>" + data.Items[i].ItemId + "</li>";
+          var item = data.Items[i];
+          l = l +"<li>" + item.ItemId + " - " +item.Slug+ " - " + item.Type + "</li>";
          }
       l = l + "</ul>";
       response.body= getBody(l, event);
