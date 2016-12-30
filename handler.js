@@ -1,20 +1,33 @@
 'use strict';
 const shortid = require('shortid');
 const AWS = require('aws-sdk');  
+const _ = require('lodash');
+const fs = require('fs');
+
+// const _ = require("underscore");
+
 var db = new AWS.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
 var s3 = new AWS.S3({region:'ap-southeast-2'});
 
 function getBody(message, event){
-    var body = message + " <hr>"+
-    "<a href=''>Home</a> "+
-    "<a href='generate'>Generate</a> "+
-    "<a href='list'>List</a> "+
-    "<a href='new'>New</a> "+
-    "<a href='testRedirect'>testRedirect</a> "+
-    "<a href='http://smelt-dev-public.s3-website-ap-southeast-2.amazonaws.com/'>Static Site</a> "+
-    "<hr>Lambda called with event values: <pre>" +JSON.stringify(event, null, 2) + "</pre>";
+    var event_json = JSON.stringify(event, null, 2);
+
+    // var template =  "<%= message %> <hr>"+
+    // "<a href=''>Home</a> "+
+    // "<a href='generate'>Generate</a> "+
+    // "<a href='list'>List</a> "+
+    // "<a href='new'>New</a> "+
+    // "<a href='testRedirect'>testRedirect</a> "+
+    // "<a href='http://smelt-dev-public.s3-website-ap-southeast-2.amazonaws.com/'>Static Site</a> "+
+    // "<hr>Lambda called with event values: <pre><%= event_json %></pre>";
+
+    var template = fs.readFileSync("templates/home.html", "utf8");
+    
+    var compiled = _.template(template);
+    var body = compiled({message: message, event_json:event_json});
     return body;
+
 }
 function getDynamoSmeltItem(id, type, slug, text){
   
