@@ -4,7 +4,7 @@
   "description": "Cloud Native CMS",
   "main": "handler.js",
   "dependencies": {
-    "shortid": "^2.2.6"
+    "serverless-wsgi": "^1.0.2"
   },
   "devDependencies": {},
   "scripts": {

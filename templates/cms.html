@@ -1,0 +1,39 @@
+
+<h1>Welcome to Smelt</h1>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+<button onclick="window.location.href='/cms/generate'">Publish Website</button>
+
+<p>The public website is available <a href="{{ smelt_public_websire_url }}">here</a>
+
+<h2>Content Types</h2>
+<ul>
+    <li>Block (Name, text)</li>
+    <li>Event (Name, Description, StartDate, EndDate)</li>
+    <li>Page (Title, path, text)</li>
+</ul>
+
+<h2>Content</h2>
+<ul>
+    <li>Block: (Name="FrontPage Teaser") </li>
+    <li>Block: (Name="Page Footer") </li>
+    <li>Event: (Name="Bardon Esp Planting", Description="Plant Trees and remove weeds", StartDate="20171019", EndDate="20171019") </li>
+
+</ul>
+
+<h2>Templates</h2>
+<ul>
+    <li>/index.html (Name="Homepage" )</li>
+    <li>/events/index.html (ContentType="Event", Type=List)</li>
+    <li>/events/\{\{ID\}\}/index.html (ContentType="Event", Type=Individual) </li>
+</ul>

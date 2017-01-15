@@ -38,3 +38,6 @@ jspm_packages
 
 # serverless directory
 .serverless
+
+# Pyc
+*.pyc

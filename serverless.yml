@@ -15,7 +15,7 @@ service: SmeltCMS
 
 provider:
   name: aws
-  runtime: nodejs4.3
+  runtime: python2.7
   stage: dev
   region: ap-southeast-2
 
@@ -45,32 +45,45 @@ provider:
 #    - exclude-me.js
 #  artifact: my-service-code.zip
 
-functions:
-  smeltHome:
-    handler: handler.smelt
-    events:
-      - http:
-          path: smelt
-          method: get
-  smeltList:
-    handler: handler.smelt
-    events:
-      - http:
-          path: smelt/list
-          method: get
-  smeltNew:
-    handler: handler.smelt
-    events:
-      - http:
-          path: smelt/new
-          method: get
+plugins:
+  - serverless-wsgi
 
-  smeltGenerate:
-    handler: handler.smelt
+functions:
+  api:
+    handler: wsgi.handler
     events:
-      - http:
-          path: smelt/generate
-          method: get
+      - http: ANY {proxy+}
+
+custom:
+  wsgi:
+    app: smelt.app
+
+# functions:
+#   smeltHome:
+#     handler: handler.smelt
+#     events:
+#       - http:
+#           path: smelt
+#           method: get
+#   smeltList:
+#     handler: handler.smelt
+#     events:
+#       - http:
+#           path: smelt/list
+#           method: get
+#   smeltNew:
+#     handler: handler.smelt
+#     events:
+#       - http:
+#           path: smelt/new
+#           method: get
+
+#   smeltGenerate:
+#     handler: handler.smelt
+#     events:
+#       - http:
+#           path: smelt/generate
+#           method: get
 
 resources:  
   Resources:
@@ -93,8 +106,8 @@ resources:
           - AttributeName: ItemId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
     SmeltIAMPolicy:
       Type: AWS::IAM::Policy
       DependsOn: DynamoDbTable
