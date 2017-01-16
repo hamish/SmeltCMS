@@ -10,6 +10,9 @@ from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoad
 import logging
 from datetime import datetime
 
+dynamodbClient = boto3.client('dynamodb')
+s3Client = boto3.client('s3')
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -38,7 +41,12 @@ def frontpage():
 @app.route("/cms/", methods=['GET', 'POST'])
 def cms():
     logging.info(request)
-    params={'smelt_public_websire_url': "http://smelt-dev-public.s3-website-ap-southeast-2.amazonaws.com/"}
+
+    result = dynamodbClient.scan(TableName='SmeltCMSContentType')
+    logging.info(result)
+
+    params={'smelt_public_websire_url': "http://smelt-dev-public.s3-website-ap-southeast-2.amazonaws.com/",
+    'contentTypes':result.get('Items',[])}
     return render_template('cms.html', **params)
 
 @app.route('/cms/generate', methods=['GET'])
@@ -46,8 +54,7 @@ def generate():
     now = datetime.now()
     body = "This file generated: %s - Hi there" % (str(now))
 
-    s3client = boto3.client('s3')
-    response = s3client.put_object(
+    response = s3Client.put_object(
         ACL='public-read',
         Body=body,
         Bucket='smelt-dev-public',

@@ -18,6 +18,9 @@
 
 <h2>Content Types</h2>
 <ul>
+    {% for ct in contentTypes %}
+      <li >{{ ct }}</li>
+    {% endfor %}
     <li>Block (Name, text)</li>
     <li>Event (Name, Description, StartDate, EndDate)</li>
     <li>Page (Title, path, text)</li>
@@ -25,6 +28,9 @@
 
 <h2>Content</h2>
 <ul>
+    {% for item in contentItems %}
+      <li >{{ item }}</li>
+    {% endfor %}
     <li>Block: (Name="FrontPage Teaser") </li>
     <li>Block: (Name="Page Footer") </li>
     <li>Event: (Name="Bardon Esp Planting", Description="Plant Trees and remove weeds", StartDate="20171019", EndDate="20171019") </li>
@@ -33,7 +39,11 @@
 
 <h2>Templates</h2>
 <ul>
+    {% for template in tempates %}
+      <li >{{ template }}</li>
+    {% endfor %}
     <li>/index.html (Name="Homepage" )</li>
     <li>/events/index.html (ContentType="Event", Type=List)</li>
     <li>/events/\{\{ID\}\}/index.html (ContentType="Event", Type=Individual) </li>
 </ul>
+
